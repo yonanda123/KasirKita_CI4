@@ -14,7 +14,7 @@
 </footer>
 
 <!-- <script src="<?= base_url(); ?>/public/template/lib/jquery/jquery.min.js"></script> -->
-<script src="<?= base_url(); ?>/public/template/vendor/jquery/jquery.min.js"></script>
+<script src="<?= base_url(); ?>/public/template/lib/jquery/jquery.min.js"></script>
 <script src="<?= base_url(); ?>/public/template/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="<?= base_url(); ?>/public/template/lib/feather-icons/feather.min.js"></script>
 <script src="<?= base_url(); ?>/public/template/lib/perfect-scrollbar/perfect-scrollbar.min.js"></script>

@@ -1,4 +1,6 @@
-<?php namespace Config;
+<?php
+
+namespace Config;
 
 use CodeIgniter\Events\Events;
 
@@ -20,11 +22,9 @@ use CodeIgniter\Events\Events;
  */
 
 Events::on('pre_system', function () {
-	if (ENVIRONMENT !== 'testing')
-	{
-		while (\ob_get_level() > 0)
-		{
-			\ob_end_flush();
+	if (ENVIRONMENT !== 'testing') {
+		while (\ob_get_level() > 0) {
+			\ob_end_clean(); // buang buffer, bukan kirim
 		}
 
 		\ob_start(function ($buffer) {
@@ -38,10 +38,8 @@ Events::on('pre_system', function () {
 	 * --------------------------------------------------------------------
 	 * If you delete, they will no longer be collected.
 	 */
-	if (ENVIRONMENT !== 'production')
-	{
+	if (ENVIRONMENT !== 'production') {
 		Events::on('DBQuery', 'CodeIgniter\Debug\Toolbar\Collectors\Database::collect');
 		Services::toolbar()->respond();
 	}
 });
-
