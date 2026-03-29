@@ -23,8 +23,8 @@ class HomeModel extends Model
     public function hitunguseractive()
     {
         return $this->db->table('db_login')->where('role_id !=', '1')
-                        ->where('is_active', '1')
-                        ->countAllResults();
+            ->where('is_active', '1')
+            ->countAllResults();
     }
     public function hitungsuperuser()
     {
@@ -37,26 +37,31 @@ class HomeModel extends Model
     public function getdatarole()
     {
         return $this->db->table('db_login')->select('COUNT(db_login.role_id) AS jumlah, user_role.role AS role')
-                        ->where('role !=', 'admin')
-						->join('user_role', 'db_login.role_id=user_role.role_id')
-						->groupBy('db_login.role_id')
-						->get()->getResultArray();
+            ->where('role !=', 'admin')
+            ->join('user_role', 'db_login.role_id=user_role.role_id')
+            ->groupBy('db_login.role_id')
+            ->get()->getResultArray();
     }
     public function getdatajumlah()
     {
-        return $this->db->table('db_login')->select('tahun AS tahun, bulan AS bulan, COUNT(id_pengguna) AS jumlah')
-        ->join('user_role', 'db_login.role_id=user_role.role_id')
-                        ->like('role', 'user')
-						->groupBy('bulan')
-						->get()->getResultArray();
+        return $this->db->table('db_login')
+            ->select('tahun AS tahun, bulan AS bulan, COUNT(id_pengguna) AS jumlah')
+            ->join('user_role', 'db_login.role_id=user_role.role_id')
+            ->like('role', 'user')
+            ->groupBy(['tahun', 'bulan'])
+            ->get()
+            ->getResultArray();
     }
     public function getdatajumlahsuperuser()
     {
-        return $this->db->table('db_login')->select('year(tgl) AS tahun, month(tgl) AS bulan, COUNT(id_pengguna) AS jumlah')
-                        // ->join('user_role', 'db_login.role_id=user_role.role_id')
-                        ->Where('role_id', '3')
-						->groupBy('month(tgl)')
-						->get()->getResultArray();
+        return $this->db->table('db_login')
+            ->select('YEAR(tgl) AS tahun, MONTH(tgl) AS bulan, COUNT(id_pengguna) AS jumlah')
+            ->where('role_id', '3')
+            ->groupBy(['YEAR(tgl)', 'MONTH(tgl)'])
+            ->orderBy('YEAR(tgl)', 'ASC')
+            ->orderBy('MONTH(tgl)', 'ASC')
+            ->get()
+            ->getResultArray();
     }
 
     public function getData($tahun = ['2020'],  $user = [])
@@ -76,16 +81,16 @@ class HomeModel extends Model
     public function getCountPengguna($tahun)
     {
         $this->builder()->select('COUNT(db_login.role_id) AS jumlah, user_role.role AS role')->where('tahun', $tahun)
-        ->where('role !=', 'admin')
-        ->join('user_role', 'db_login.role_id=user_role.role_id')
-        ->groupBy('db_login.role_id');
+            ->where('role !=', 'admin')
+            ->join('user_role', 'db_login.role_id=user_role.role_id')
+            ->groupBy('db_login.role_id');
         $query = $this->builder()->get()->getResultArray();
         return $query;
     }
     public function getCountUser($tahun)
     {
         $this->builder()->select('bulan, COUNT(id_pengguna) as total')->where('tahun', $tahun)
-        ->where('role_id !=', '1')->where('role_id !=', '');
+            ->where('role_id !=', '1')->where('role_id !=', '');
         $this->builder()->groupBy('bulan');
         // ->orderBy('bulan', 'asc')
         // ->orderBy('total', 'desc');
