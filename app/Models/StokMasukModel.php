@@ -1,4 +1,7 @@
-<?php namespace App\Models;
+<?php
+
+namespace App\Models;
+
 use CodeIgniter\Model;
 
 class StokMasukModel extends Model
@@ -26,15 +29,16 @@ class StokMasukModel extends Model
         // ON `db_stok`.`id_produk` = `db_produk`.`id_produk`";
         // return $query;
         return $this->db->table('db_stok_masuk')
-        ->join('db_detail_stok_masuk', 'db_detail_stok_masuk.detail_stok_masuk_id=db_stok_masuk.id_stok_masuk')
-        ->join('db_produk', 'db_produk.id_produk=db_detail_stok_masuk.detail_produk_id')
-        ->groupBy('kode_stok_masuk')
-        ->get()
-        ->getResultArray();
-    
+            ->select('db_stok_masuk.kode_stok_masuk, COUNT(db_detail_stok_masuk.detail_produk_id) as total_item')
+            ->join('db_detail_stok_masuk', 'db_detail_stok_masuk.detail_stok_masuk_id=db_stok_masuk.id_stok_masuk')
+            ->join('db_produk', 'db_produk.id_produk=db_detail_stok_masuk.detail_produk_id')
+            ->groupBy('db_stok_masuk.kode_stok_masuk')
+            ->get()
+            ->getResultArray();
     }
 
-    public function tambah($result){
+    public function tambah($result)
+    {
         return $this->db->insert_batch('db_stok_masuk', $result);
     }
 
