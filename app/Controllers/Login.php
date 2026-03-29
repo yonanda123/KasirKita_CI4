@@ -45,8 +45,8 @@ class Login extends BaseController
                     'required' => 'Password Tidak Boleh Kosong',
                     'min_length' => 'Password Minimal 5 Karakter',
                 ]
-                ],
-            
+            ],
+
         ])) {
             return redirect()->to(site_url('login'))->withInput();
         }
@@ -97,8 +97,10 @@ class Login extends BaseController
                 session()->setFlashdata('txt', 'Silahkan Verifikasi Terlebih Dahulu');
                 return redirect()->to(site_url('login'));
             }
-            
-        } elseif (($cek['password'] !== $password) || ($cek2['password'] !== $password)) {
+        } elseif (
+            ($cek && $cek['password'] !== $password) ||
+            ($cek2 && $cek2['password'] !== $password)
+        ) {
             session()->setFlashdata('success', true);
             session()->setFlashdata('bahaya', 'Password Salah');
             return redirect()->to(site_url('login'));
@@ -945,7 +947,7 @@ class Login extends BaseController
                 'rules' => 'required|numeric|trim',
                 'errors' => [
                     'required' => 'No. Telepon Outlet Tidak Boleh Kosong',
-                    'numeric'=> 'No. Telepon Harus Angka'
+                    'numeric' => 'No. Telepon Harus Angka'
                 ]
             ],
             'subkategori' => [
@@ -963,7 +965,7 @@ class Login extends BaseController
         ])) {
             return redirect()->to('kategori')->withInput();
         }
-        if ($user['email'] == $email) {   
+        if ($user['email'] == $email) {
             $data = [
                 'kategori'       => $this->request->getVar('id_kategori'),
                 'subkategori'    => $this->request->getVar('subkategori'),
@@ -971,9 +973,9 @@ class Login extends BaseController
                 'kota_kabupaten' => $this->request->getVar('kota'),
                 'provinsi'       => $this->request->getVar('provinsi'),
             ];
-            $model->ubahuser($email, $data); 
+            $model->ubahuser($email, $data);
             $dataOutlet = [
-                'nama_outlet'   => $this->request->getVar('nama_outlet') .' Pusat',
+                'nama_outlet'   => $this->request->getVar('nama_outlet') . ' Pusat',
                 'nama_bisnis'   => $this->request->getVar('nama_bisnis'),
                 'alamat'        => $this->request->getVar('alamat'),
                 'kota_id'       => $this->request->getVar('kota_kabupaten'),
